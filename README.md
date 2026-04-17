@@ -24,10 +24,10 @@ Uses AppleScript to find a claude.ai tab in your browser and executes a small Ja
 
 Each refresh goes through up to two stages:
 
-1. **Tab hint** (~0.5s): The plugin remembers which browser tab worked last time and goes straight to it. This is the common path for most refreshes.
-2. **Full discovery** (~8s): If the hinted tab no longer responds (e.g. Chrome suspended it), a single bulk AppleScript call finds all claude.ai tabs across all windows, then tries them in parallel. The first tab to respond becomes the new hint.
+1. **Tab hint** (~0.5s): The plugin remembers which browser tab worked last time. It runs the JavaScript snippet directly on that tab to fetch usage data from Claude's API. This is the common path.
+2. **Full discovery** (~8s, only when the hint fails): If the remembered tab no longer responds (e.g. Chrome suspended it), the plugin fetches all tab URLs across all browser windows in a single fast call, finds every claude.ai tab, and runs the JavaScript snippet on all of them in parallel. The first one to respond provides the usage data and becomes the new hint.
 
-Active tabs respond instantly. Inactive tabs work too, as long as Chrome hasn't suspended them. If all your claude.ai tabs are suspended, the plugin shows an error asking you to visit one to wake it up.
+Inactive tabs work fine as long as Chrome hasn't suspended them. If all your claude.ai tabs are suspended, the plugin shows an error asking you to visit one to wake it up.
 
 **Note:** This uses Claude.ai's internal API, which could change without notice.
 

@@ -20,9 +20,14 @@ Refresh
 
 ## How it works
 
-Uses AppleScript to find a claude.ai tab in your browser and executes a small JavaScript snippet that makes an authenticated API call using your existing browser session. No API keys, no cookie extraction, no pip dependencies — just Python 3 standard library.
+Uses AppleScript to find a claude.ai tab in your browser and executes a small JavaScript snippet that makes an authenticated API call using your existing browser session. No API keys, no cookie extraction, no pip dependencies - just Python 3 standard library.
 
-Tab discovery is fast: a single bulk AppleScript call finds all claude.ai tabs across all windows, then tries them in parallel. A tab hint is cached so subsequent refreshes go directly to the last working tab (~0.5s). Active tabs respond instantly; inactive but non-discarded tabs work too. If Chrome has suspended all your claude.ai tabs, the plugin shows an actionable error asking you to visit one to wake it up.
+Each refresh goes through up to two stages:
+
+1. **Tab hint** (~0.5s): The plugin remembers which browser tab worked last time and goes straight to it. This is the common path for most refreshes.
+2. **Full discovery** (~8s): If the hinted tab no longer responds (e.g. Chrome suspended it), a single bulk AppleScript call finds all claude.ai tabs across all windows, then tries them in parallel. The first tab to respond becomes the new hint.
+
+Active tabs respond instantly. Inactive tabs work too, as long as Chrome hasn't suspended them. If all your claude.ai tabs are suspended, the plugin shows an error asking you to visit one to wake it up.
 
 **Note:** This uses Claude.ai's internal API, which could change without notice.
 
@@ -64,16 +69,16 @@ That's it. Keep a claude.ai tab open somewhere in your browser (it doesn't need 
 
 | What | How |
 |------|-----|
-| Refresh interval | Rename the file — the `10s` in `claude_usage.10s.py` controls it (e.g., `30s`, `1m`, `5m`) |
-| Debug mode | `CLAUDE_USAGE_DEBUG=1 python3 claude_usage.10s.py` — dumps raw API response |
+| Refresh interval | Rename the file - the `10s` in `claude_usage.10s.py` controls it (e.g., `30s`, `1m`, `5m`) |
+| Debug mode | `CLAUDE_USAGE_DEBUG=1 python3 claude_usage.10s.py` - dumps raw API response |
 
 ## Troubleshooting
 
 | Symptom | Fix |
 |---------|-----|
-| "Claude ⚠" — all tabs suspended | Visit any claude.ai tab in your browser to wake it up |
-| "Claude ⚠" — no tab found | Open a claude.ai tab in your browser |
-| "Claude ⚠" — JS error | Enable JavaScript from Apple Events in your browser (step 4) |
+| "Claude ⚠" - all tabs suspended | Visit any claude.ai tab in your browser to wake it up |
+| "Claude ⚠" - no tab found | Open a claude.ai tab in your browser |
+| "Claude ⚠" - JS error | Enable JavaScript from Apple Events in your browser (step 4) |
 | Nothing in menu bar | Make sure SwiftBar is running and pointed at the right plugin folder |
 | SwiftBar error icon | Make sure only `claude_usage.10s.py` is executable (`chmod -x` other files) |
 | Numbers look stale | Click the dropdown → Refresh |
@@ -137,11 +142,11 @@ python3 ~/claude-usage-bar/claude_usage.10s.py
 
 ### Files
 
-- `claude_usage.10s.py` — the SwiftBar plugin (10s refresh interval)
-- `~/.claude-usage-tab-hint.json` — cached tab location for fast refresh (auto-created, not in repo)
+- `claude_usage.10s.py` - the SwiftBar plugin (10s refresh interval)
+- `~/.claude-usage-tab-hint.json` - cached tab location for fast refresh (auto-created, not in repo)
 
 ### Notes
 
-- The plugin requires a claude.ai tab to be open in a supported browser. It does not need to be the active tab — inactive tabs work as long as Chrome hasn't suspended them.
+- The plugin requires a claude.ai tab to be open in a supported browser. It does not need to be the active tab - inactive tabs work as long as Chrome hasn't suspended them.
 - The `.10s` in the filename controls the refresh interval. Rename to change (e.g., `.30s`, `.1m`).
 - SwiftBar treats all executable files in the plugin directory as plugins. Ensure only `claude_usage.10s.py` is executable.

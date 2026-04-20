@@ -1,6 +1,6 @@
 # Claude Usage Display
 
-A [SwiftBar](https://swiftbar.app) plugin that shows your Claude.ai usage in the macOS menu bar.
+A [SwiftBar](https://swiftbar.app) plugin that shows your Claude.ai usage in your macOS menu bar.
 
 ![Claude Usage Display in the menu bar](screenshot.png)
 

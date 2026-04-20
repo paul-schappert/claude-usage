@@ -20,12 +20,12 @@ Refresh
 
 ## How it works
 
-Uses AppleScript to find a claude.ai tab in your browser and executes a small JavaScript snippet that makes an authenticated API call using your existing browser session. No API keys, no cookie extraction, no pip dependencies - just Python 3 standard library.
+Uses AppleScript to find a claude.ai tab in your browser and executes a small JavaScript snippet that makes an authenticated API call using your existing browser session. No API keys, no cookie extraction, no pip dependencies - just the Python 3 standard library.
 
-Each refresh goes through up to two stages:
+The refresh works as follows:
 
-1. **Tab hint** (~0.5s): The plugin remembers which browser tab worked last time. It runs the JavaScript snippet directly on that tab to fetch usage data from Claude's API. This is the common path.
-2. **Full discovery** (~8s, only when the hint fails): If the remembered tab no longer responds (e.g. Chrome suspended it), the plugin fetches all tab URLs across all browser windows in a single fast call, finds every claude.ai tab, and runs the JavaScript snippet on all of them in parallel. The first one to respond provides the usage data and becomes the new hint.
+1. **Tab hint** (every ~10s): The plugin remembers which browser tab worked last time. It runs the JavaScript snippet directly on that tab to fetch usage data from Claude's API. This is the common path.
+2. **Full discovery** (when the hint fails): If the remembered tab no longer responds (e.g. Chrome suspended it), the plugin fetches all tab URLs across all browser windows, finds every claude.ai tab, and runs the JavaScript snippet on all of them in parallel. The first one to respond provides the usage data and becomes the new hint.
 
 Inactive tabs work fine as long as Chrome hasn't suspended them. If all your claude.ai tabs are suspended, the plugin shows an error asking you to visit one to wake it up.
 

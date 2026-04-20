@@ -2,8 +2,10 @@
 
 A [SwiftBar](https://swiftbar.app) plugin that shows your Claude.ai usage in the macOS menu bar.
 
+![Claude Usage Display in the menu bar](screenshot.png)
+
 ```
-37 │ 233      ← session % used │ minutes until session reset
+8 │ 233      ← session % used │ minutes until session reset
 ```
 
 Click to see the full breakdown and open your usage page:
@@ -42,7 +44,7 @@ Inactive tabs work fine as long as Chrome hasn't suspended them. If all your cla
 
 2. Clone this repo:
    ```bash
-   git clone https://github.com/PaulSchappert/claude-usage-bar.git ~/claude-usage-bar
+   git clone https://github.com/PaulSchappert/claude-usage.git ~/claude-usage-bar
    ```
 
 3. Make the plugin executable:
@@ -117,7 +119,7 @@ brew list --cask swiftbar 2>/dev/null && echo "OK: SwiftBar installed" || echo "
 brew install --cask swiftbar
 
 # 2. Clone the repo
-git clone https://github.com/PaulSchappert/claude-usage-bar.git ~/claude-usage-bar
+git clone https://github.com/PaulSchappert/claude-usage.git ~/claude-usage-bar
 
 # 3. Make plugin executable, other files not
 chmod +x ~/claude-usage-bar/claude_usage.10s.py

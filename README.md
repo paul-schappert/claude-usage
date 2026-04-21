@@ -62,7 +62,7 @@ Inactive tabs work fine as long as Chrome hasn't suspended them. If all your cla
 
 6. Make sure non-plugin files are not executable:
    ```bash
-   chmod -x ~/claude-usage-bar/LICENSE ~/claude-usage-bar/README.md
+   chmod -x ~/claude-usage-bar/LICENSE ~/claude-usage-bar/README.md ~/claude-usage-bar/screenshot.png
    ```
 
 That's it. Keep a claude.ai tab open somewhere in your browser (it doesn't need to be the active tab) and your usage will appear in the menu bar.

@@ -2,11 +2,11 @@
 
 A [SwiftBar](https://swiftbar.app) plugin that shows your Claude.ai usage in your macOS menu bar.
 
-![Claude Usage Display in the menu bar](screenshot.png)
-
 ```
 8 │ 233      ← session % used │ minutes until session reset
 ```
+
+![Claude Usage Display in the menu bar](screenshot.png)
 
 Click to see the full breakdown and open your usage page:
 

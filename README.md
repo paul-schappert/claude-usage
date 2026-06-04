@@ -61,6 +61,11 @@ Inactive tabs work fine as long as Chrome hasn't suspended them. If all your cla
    chmod -x ~/claude-usage-bar/LICENSE ~/claude-usage-bar/README.md ~/claude-usage-bar/screenshot.png
    ```
 
+7. Start SwiftBar automatically at login so the menu bar item is always there. Either enable **Launch at Login** in SwiftBar's preferences, or run:
+   ```bash
+   osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/SwiftBar.app", hidden:true}'
+   ```
+
 That's it. Keep a claude.ai tab open somewhere in your browser (it doesn't need to be the active tab) and your usage will appear in the menu bar.
 
 ## Configuration
@@ -77,7 +82,7 @@ That's it. Keep a claude.ai tab open somewhere in your browser (it doesn't need 
 | "Claude ⚠" - all tabs suspended | Visit any claude.ai tab in your browser to wake it up |
 | "Claude ⚠" - no tab found | Open a claude.ai tab in your browser |
 | "Claude ⚠" - JS error | Enable JavaScript from Apple Events in your browser (step 4) |
-| Nothing in menu bar | Make sure SwiftBar is running and pointed at the right plugin folder |
+| Nothing in menu bar | Make sure SwiftBar is running (`open -a SwiftBar`) and pointed at the right plugin folder. Enable Launch at Login (setup step 7) so it survives restarts |
 | SwiftBar error icon | Make sure only `claude_usage.10s.py` is executable (`chmod -x` other files) |
 | Numbers look stale | Click the dropdown → Refresh |
 
@@ -126,6 +131,9 @@ chmod -x ~/claude-usage-bar/LICENSE ~/claude-usage-bar/README.md
 
 # 5. Enable JavaScript from Apple Events (user must do this manually)
 # Tell the user: Chrome → View → Developer → Allow JavaScript from Apple Events
+
+# 6. Start SwiftBar at login so the menu bar item survives restarts
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/SwiftBar.app", hidden:true}'
 ```
 
 ### Verification

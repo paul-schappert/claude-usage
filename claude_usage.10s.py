@@ -447,6 +447,22 @@ def main():
     reset_at    = flat.get("five_hour.resets_at")
     wl_reset_at = flat.get("seven_day.resets_at")
 
+    # Publish the account-wide usage for the Claude Code status line
+    # (~/.claude/scripts/statusline.sh reads ~/.claude/cache/ratelimits.tsv,
+    # newest epoch wins). This catches usage from claude.ai chats too, which
+    # idle Claude Code windows can't see.
+    if sl_pct is not None and wl_pct is not None:
+        try:
+            import time as _time
+            _dir = os.path.expanduser("~/.claude/cache")
+            os.makedirs(_dir, exist_ok=True)
+            _tmp = os.path.join(_dir, ".ratelimits.tsv.tmp")
+            with open(_tmp, "w") as _fh:
+                _fh.write(f"{int(_time.time())}\t{round(float(sl_pct))}\t{round(float(wl_pct))}\n")
+            os.replace(_tmp, os.path.join(_dir, "ratelimits.tsv"))
+        except Exception:
+            pass  # never break the menu bar over the status-line cache
+
     has_session = sl_pct is not None
     has_weekly  = wl_pct is not None
     reset_mins  = minutes_until(reset_at)

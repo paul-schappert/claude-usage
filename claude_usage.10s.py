@@ -447,18 +447,31 @@ def main():
     reset_at    = flat.get("five_hour.resets_at")
     wl_reset_at = flat.get("seven_day.resets_at")
 
+    # Model-scoped weekly limit (Fable) — lives in the limits[] array, not as a
+    # top-level field. Find the weekly_scoped entry whose scope is the Fable model.
+    fable_pct = None
+    fable_reset_at = None
+    for lim in (data.get("limits") or []):
+        model = ((lim.get("scope") or {}).get("model") or {})
+        if lim.get("kind") == "weekly_scoped" and model.get("display_name") == "Fable":
+            fable_pct = lim.get("percent")
+            fable_reset_at = lim.get("resets_at")
+            break
+
     # Publish the account-wide usage for the Claude Code status line
     # (~/.claude/scripts/statusline.sh reads ~/.claude/cache/ratelimits.tsv,
     # newest epoch wins). This catches usage from claude.ai chats too, which
-    # idle Claude Code windows can't see.
+    # idle Claude Code windows can't see. Col 4 = Fable weekly % (blank if absent;
+    # the status line is the only place it surfaces — stdin JSON has no fable field).
     if sl_pct is not None and wl_pct is not None:
         try:
             import time as _time
             _dir = os.path.expanduser("~/.claude/cache")
             os.makedirs(_dir, exist_ok=True)
             _tmp = os.path.join(_dir, ".ratelimits.tsv.tmp")
+            _fable = round(float(fable_pct)) if fable_pct is not None else ""
             with open(_tmp, "w") as _fh:
-                _fh.write(f"{int(_time.time())}\t{round(float(sl_pct))}\t{round(float(wl_pct))}\n")
+                _fh.write(f"{int(_time.time())}\t{round(float(sl_pct))}\t{round(float(wl_pct))}\t{_fable}\n")
             os.replace(_tmp, os.path.join(_dir, "ratelimits.tsv"))
         except Exception:
             pass  # never break the menu bar over the status-line cache
@@ -486,6 +499,11 @@ def main():
         print(f"Weekly (7d):   {round(float(wl_pct))}% | {link}")
     if wl_reset_at:
         print(f"Resets in {dhm(wl_reset_at)} | {link}")
+    if fable_pct is not None:
+        print("---")
+        print(f"Fable (7d):    {round(float(fable_pct))}% | {link}")
+        if fable_reset_at:
+            print(f"Resets in {dhm(fable_reset_at)} | {link}")
     print("---")
     print("Refresh | refresh=true")
 

@@ -200,3 +200,89 @@ Full mathematics in scratchpad `insertion_lemma.md`, code+verifications in
   narrow-tree words complete at m = 8 and 4/28 at m = 10. The dense-cycle
   template (obligation 3) is now the single remaining gap between the
   narrow family and a full uniform theorem.
+
+## Result 10 (Phase 7, previous session): the dense-cycle template — dual
+## factorization, bit-field closure system, toggle box
+
+Full mathematics in scratchpad `dense_template.md`, code `dense_template.py`
+(suites A, D1–D5, all passing; re-run and re-confirmed this session).
+Budget caveat: everything in this Result is about the reduced problem with
+the uniform budget family — see Result 11 for its physical status.
+
+* **Dual factorization (Thm D1).** B_0 = T_{(1,1)} ∘ D_0 and
+  B_1 = T_{(1,3)} ∘ D_1 where D_0 = T_{−e0}∘A_0 (alphabet {id, L, Λ},
+  L = (−1,0), Λ = (−1,1)) and D_1 = T_{−e1}∘A_1 (alphabet {id, S, Z}).
+  The dense cycles are sparse staircase gadgets in dual coordinates; the
+  three alphabets are the three adjacent pairs of lattice-hexagon
+  directions. Verified pointwise on all 16 stored solutions.
+* **Bit-field parametrization (Thm D2).** Completions of a gadget word W
+  ⟺ swap-bit fields b : Z_m² → {0,1} satisfying a LOCAL closure system
+  C(W) (dual closure + injectivity + coverage + nonempty idles) whose two
+  dual first-return maps are single cycles. No Hamiltonicity constraint
+  remains in the model.
+* **Rigidity/toggle box.** C(W) is tiny (4–4096 for chain words m ≤ 24)
+  and is (a sub-box of) a box of disjoint GF(2) bridge toggles over the
+  minimum solution; bridges are full anti-diagonal segments of I_2 with
+  endpoint recruitment (Lemma D3, checked on all 26 completions).
+* **Exact decision procedure.** Exhausting C(W) + two return-map checks
+  decides completability of W in seconds at m = 24 (vs hours of circuit
+  SAT); at m = 6 it reproduces the SAT ground truth exactly (77 words).
+  Chain words completable at every even m ∈ [6, 24] (m = 22, 24 new);
+  full frontier censuses at m = 22/24: 40/92 and 46/82 children
+  completable, failures being exhaustive certificates.
+
+## Result 11 (Phase 8, this session): realizability obstruction, repaired
+## pipeline, and verified decompositions for all even m ∈ [4, 24+]
+
+Full write-up: scratchpad `main_theorem.md`; driver `main_theorem.py`
+(T1–T6); code `assembler.py`, `dense_template2.py`, `narrow_censusF.py`.
+
+1. **Obstruction theorem (soundness audit).** In any Hamilton
+   decomposition of D_3(m), a return path is m arc-steps with
+   nonnegative bump counts x + y + z = m and x ≡ (t + a(p))_x mod m,
+   x ∈ [0, m]. For t_2 = (−2,−4) this forces z < 0 (m ≥ 8) or A_2 = id
+   (m = 6): **the uniform budget family t_0 = (0,1), t_1 = (1,2),
+   t_2 = (−2,−4) is unrealizable in D_3(m) for every even m ≥ 6.**
+   Physically realizable single-swap budgets are exactly the integer
+   matrices with Σa_c = Σb_c = m−1 and a_c + b_c ≤ m−1 (fiber-role
+   scheduling; exhaustively confirmed at m = 6, 8). Consequently ALL
+   uniform-family completions of phases 3–7 (chains m ≥ 6, dense
+   template, narrow censuses, m = 6/8 mining) solve an abstract
+   permutation problem, not D_3(m). The analytic machinery itself is
+   budget-generic and survives.
+2. **Repair.** For balanced words ν is direction-symmetric, so
+   B_2-singleness under t and −t coincide (machine-exact on all 122
+   balanced m = 6 words): **Pillar 1 (the Narrow Insertion Theorem and
+   the closed-form family W_m) transfers verbatim to t_2 = (+2,+4)**,
+   which IS realizable — verified word-level to m = 60 and by direct
+   orbit to m = 40. A scan of all 22 schedulable budget matrices with
+   cycle-2 lifts (2,4) at m = 8 found completable companions; the
+   constant-residue schedulable family
+   **F: t_0 = (1,−6), t_1 = (−4,1), t_2 = (2,4)**
+   (lifts a = (1, m−4, 2), b = (m−6, 1, 4); explicit schedule for all
+   even m ≥ 8) was adopted. Under F both dense cycles have odd
+   translation sums, so the budget-parametric closure census is an exact
+   decision procedure (validated against circuit SAT at m = 8).
+3. **Verified decompositions.** For every even m ∈ [8, 24] some
+   narrow-tree word completes under F (full-tree exhaustive censuses;
+   4/14 at m = 8 rising to 359/1792 at m = 22); one completion per level
+   was assembled through the fiber schedule into a full D_3(m)
+   decomposition and passed the independent 3D checker. With the m = 4, 6
+   base artifacts: **D_3(m) has a machine-verified Hamilton decomposition
+   for every even m ∈ [4, 24]**, extension beyond 24 running (greedy).
+   Certificates: famF_completion_m*.json, famF_decomp3d_m*.json.
+4. **Inheritance is dead, level-recurrence is the law.** Under BOTH
+   budget worlds, completability is NOT inherited along insertion edges
+   (at m = 8 all four completable words have all eight children
+   non-completable), so no edge-level invariant — including the hoped-for
+   dual-triple invariant — can exist. Completability recurs at every
+   LEVEL with growing density (~25 % by m = 22); abstract-tree data to
+   m = 24 is consistent with "every completable word has a completable
+   descendant within depth 4" (depth 3 provably insufficient).
+5. **Exact remaining gap** for the uniform theorem: prove that for every
+   even m ≥ 8 some narrow-tree word admits a family-F completion. All
+   other components (base cases, Pillar 1, realizability, assembly,
+   decision procedure) are proven and/or machine-verified. Candidate
+   routes: bounded-depth descendant recurrence; level-aggregated
+   counting; or a co-designed explicit (word, bit-field) family with
+   transfer-matrix-provable dual determinants.

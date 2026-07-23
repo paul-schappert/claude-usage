@@ -84,6 +84,28 @@ symmetry objectives to force a generalizable gadget pattern.
 - Skew-product orbit criterion: (u,i) ↦ (u+w, i+g(u)) is a single m²-cycle
   iff gcd(w, m) = 1 and gcd(Σ_u g(u), m) = 1.
 
+## Result 5: budget structure of the reduced problem (SAT, verified)
+
+Scanning all translation-budget triples ((a_c, b_c), Σa_c = Σb_c = m−1):
+- m=4: exactly 12/100 feasible — the rigid family {a_c} = {b_c} = {0,1,2}
+  with b = a±1 (mod 3), up to cycle relabeling.
+- m=6: 294/441 feasible. A budget pair (a_c, b_c) = (0, 0) is ALWAYS
+  infeasible (105/105 of its occurrences) — no cycle can run on zero
+  translation. 42 further infeasible triples remain uncharacterized.
+- **Uniform budget family: t_0 = (0,1), t_1 = (1,2), t_2 = (−2,−4) mod m
+  is feasible for m = 4, 6, 8, 10, 12** — constant translations independent
+  of m. The whole problem now reduces to finding a uniform gadget pattern
+  for this fixed budget family.
+
+Additional impossibility notes (proved): gadget fields measurable in
+u = i+j alone are impossible for all m (bijectivity forces a constant
+idler-indicator along the u-cycle); fields measurable in v = i−j alone are
+SAT-infeasible for m = 4, 6 across all budgets.
+
+CP-SAT encoding caveat (cost a debugging round): AddCircuit interprets a
+selected self-loop arc as "node excluded" — translation+move combinations
+that wrap to the identity must be explicitly forbidden, not omitted.
+
 ## Open threads
 
 1. Solve the reduced gadget problem uniformly in even m (design or forced

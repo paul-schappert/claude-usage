@@ -286,3 +286,60 @@ Full write-up: scratchpad `main_theorem.md`; driver `main_theorem.py`
    routes: bounded-depth descendant recurrence; level-aggregated
    counting; or a co-designed explicit (word, bit-field) family with
    transfer-matrix-provable dual determinants.
+
+## Result 12 (Phase 9, this session): co-designed explicit families — the
+## gap is now finite-combinatorial for m ≡ 6 (mod 8), and verified to 62
+## everywhere (route (c) of the final-lemma attack)
+
+Full write-up: scratchpad `codesign.md`; driver `codesign.py` (suites
+C1–C5); discovery record `scan_families.py`, `const_scan.log`,
+`motif_scan*.log`, `blockword_law.json`, `wm_sols_m{46,54}.json`.
+
+1. **Four explicit branch families, one per residue of m mod 8**, all
+   inside the narrow tree (so B_2 is single by Pillar 1), machine-verified
+   completable under family F at every tested level:
+   m ≡ 6: seed 0, 0^k (= W_m) at m = 14..62 (and see 3. below);
+   m ≡ 2: seed 5, 1^k at 18, 26, 34, 42, 50;
+   m ≡ 0: seed 2, 00010·0^{4j} at 16, 24, 32, 40, 48, 56;
+   m ≡ 4: seed 0, 0000111·(0100)^j at 20, 28, 36, 44, 52, 60.
+   Suffix-periodic branches are the right "periodic family" notion (the
+   tree appends branch letters at the walk maximum). W_m is completable
+   at EXACTLY m ≡ 6 (mod 8) — exhaustive negative certificates at
+   26, 34 (and all m ≡ 0 mod 4 tested).
+2. **The {Q,P} block calculus (m ≡ 6 mod 8).** Row position u carries
+   word positions u, u+m, u+2m (three strands); a completion is a per-row
+   code (3 support bits + 3 bridge fills). With a fixed 5-row HEAD,
+   1-row BRK, 8-row TAIL and two 4-row block letters Q, P, every binary
+   word w ∈ {Q,P}^N (N = (m−14)/4) yields an explicit bit field b(w)
+   that ALWAYS satisfies the closure system (verified exhaustively at
+   N = 8); w is "valid" iff the two dual return maps are single, and
+   then b(w) is a full completion of W_m. Valid counts by N:
+   1, 0, 1, 0, 1, 0, 6, 0, 6, 0, 37, —, 83 for N = 2..14 (exhaustive;
+   empty exactly at odd N, reproducing the mod-8 law in both directions).
+   Randomized search finds valid words instantly far beyond: explicit
+   valid words stored for N = 16, 18, 20, 22, 26, 30, 40, 50
+   (m = 78..214), each an explicit verified completion of W_m.
+3. **New stations.** One decomposition per even m ∈ [34, 62] assembled
+   from the families (r6 levels: from the explicit block construction —
+   zero search) and accepted by the independent 3D checker:
+   **D_3(m) is machine-verified for every even m ∈ [4, 62]** (was 32).
+4. **Structure/obstruction ledger for the induction** (all machine-
+   checked): cycle counts over {Q,P}^N are always odd; valid sets are
+   NOT GF(2)-affine (|V_8| = 6; S_0, S_1 sizes 36/30, intersection 6);
+   single-letter periodic laws fail with +2 cycles per added period;
+   first-return orbits on the O(m) idle sections have u-displacements
+   spanning ±m/2, killing any orbit-local (finite-strand) transfer
+   matrix; the duals of valid completions are single loops with
+   |Σ_0| = m(m+10)/4, |Σ_1| = m(m+14)/4, unbalanced coset profiles
+   (multiplicities ≈ m/4), and quasi-affine loop words (arithmetic
+   run-length sweeps) — so the transfer object has to be a generalized
+   (Traldi-type) interlacement of an explicit quasi-affine loop family,
+   not chord calculus and not orbit wiring.
+5. **Sharpened remaining gap.** Old form: "for every even m ≥ 8 some
+   narrow-tree word completes under F" (now verified to 62). New,
+   strictly finite form for the class m ≡ 6 (mod 8): **V_N ≠ ∅ for every
+   even N** — a statement about two explicitly-listed 4-row letters.
+   Proving it (plus extracting the analogous calculi for the other three
+   families, which the same procedure should yield) closes the uniform
+   theorem. Everything else in the pipeline is proven and/or
+   machine-verified end to end.

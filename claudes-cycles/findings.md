@@ -162,3 +162,41 @@ and its m ≤ 8 successes give the test bed for the criterion.
 4. Structured-table search (scheme with explicit 1, m−2 classes) still
    running in background.
 5. Settle D_5(4), D_8(2) with longer runs (low priority).
+
+## Result 9 (Phase 6): the Insertion Lemma — proved for an explicit
+## infinite family (Lemma B is now a theorem on that family)
+
+Full mathematics in scratchpad `insertion_lemma.md`, code+verifications in
+`insertion_lemma.py` (E1–E5, V1–V4). Highlights:
+
+* **Exact transformation** of the chord diagram under double-period
+  insertion at (p, q): in the integer label walk (eps, z) = (a mod 2,
+  3a − i), z NEVER shifts — the entire global re-pairing is (i) a parity
+  flip on the segment between the insertion points, (ii) six explicit cap
+  labels, (iii) modulus change m → m+2. Machine-exact (1200 random
+  triples).
+* **Narrow Insertion Theorem** (proved + exhaustively verified at
+  m = 6, 8): for balanced words of minimal z-width m−1, the ONLY
+  balance-preserving insertions are the two diagonal insertions at the
+  walk maximum (which must be unique per parity class), and these
+  preserve det_{GF(2)} of the interlacement matrix UNCONDITIONALLY — the
+  two new chords border the matrix with a zero interlacement row, so
+  cofactor expansion kills the correction. Simplicity of narrow balanced
+  loops is automatic (proved).
+* **Theorem.** W_m = 112122 (1122)^{(m−6)/2} 1 2^{m−4} 212222122 is a
+  balanced simple gadget word with B_2 = T_{(−2,−4)} ∘ A(W_m) a single
+  m²-cycle for EVERY even m ≥ 6. (Induction via the narrow theorem +
+  Cohn–Lempel; 7 seed chains verified by direct orbit count to m = 40,
+  the closed form to m = 100 word-level / m = 60 orbit-level.)
+* **Obstruction identified:** the universally-quantified insertion lemma
+  is FALSE — at m = 6, 10/77 balanced det-1 parents have no good pair and
+  two parents have NO B_2-single child at all over the full insertion set
+  (corrects the "never zero" impression of phase 5, which was a biased
+  sample); parity-averaging over pairs provably cannot work (mixed
+  parities 47/30). Existence had to be — and now is — proved on a closed
+  sub-family.
+* **Lemma C honest status:** W_m completable at m = 14 (verified full
+  solution saved) but INFEASIBLE at m = 8, 10, 12; tree-wide, 4/14
+  narrow-tree words complete at m = 8 and 4/28 at m = 10. The dense-cycle
+  template (obligation 3) is now the single remaining gap between the
+  narrow family and a full uniform theorem.

@@ -1,0 +1,20 @@
+   seed 2 branch 1: D_3(8) DECOMPOSITION ASSEMBLED + 3D-VERIFIED (saved famF_decomp3d_m8.json)
+level m=8: 14 branch-words, 4 completable [famF] 0.1s
+   seed 0 branch 01: D_3(10) DECOMPOSITION ASSEMBLED + 3D-VERIFIED (saved famF_decomp3d_m10.json)
+level m=10: 28 branch-words, 4 completable [famF] 0.2s
+   seed 1 branch 001: D_3(12) DECOMPOSITION ASSEMBLED + 3D-VERIFIED (saved famF_decomp3d_m12.json)
+level m=12: 56 branch-words, 7 completable [famF] 0.5s
+   seed 0 branch 0000: D_3(14) DECOMPOSITION ASSEMBLED + 3D-VERIFIED (saved famF_decomp3d_m14.json)
+level m=14: 112 branch-words, 19 completable [famF] 1.4s
+   seed 0 branch 00010: D_3(16) DECOMPOSITION ASSEMBLED + 3D-VERIFIED (saved famF_decomp3d_m16.json)
+level m=16: 224 branch-words, 60 completable [famF] 5.6s
+   seed 0 branch 000001: D_3(18) DECOMPOSITION ASSEMBLED + 3D-VERIFIED (saved famF_decomp3d_m18.json)
+level m=18: 448 branch-words, 63 completable [famF] 12.1s
+   seed 0 branch 0000111: D_3(20) DECOMPOSITION ASSEMBLED + 3D-VERIFIED (saved famF_decomp3d_m20.json)
+level m=20: 896 branch-words, 206 completable [famF] 38.5s
+DONE
+   seed 0 branch 00000000: D_3(22) DECOMPOSITION ASSEMBLED + 3D-VERIFIED (saved famF_decomp3d_m22.json)
+level m=22: 1792 branch-words, 359 completable [famF] 128.8s
+   seed 0 branch 000000110: D_3(24) DECOMPOSITION ASSEMBLED + 3D-VERIFIED (saved famF_decomp3d_m24.json)
+level m=24: 3584 branch-words, 906 completable [famF] 396.7s
+DONE

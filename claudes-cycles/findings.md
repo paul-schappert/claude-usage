@@ -106,6 +106,48 @@ CP-SAT encoding caveat (cost a debugging round): AddCircuit interprets a
 selected self-loop arc as "node excluded" — translation+move combinations
 that wrap to the identity must be explicitly forbidden, not omitted.
 
+## Result 6: sign obstruction (proved)
+
+For even m an m²-cycle is an odd permutation and the family translations are
+even permutations, so each gadget field A_c must be odd. Every nontrivial
+{id,e0,e1}-staircase loop on Z_m² has even length m(w0+w1)... wait — length
+is m·(w0+w1) which is even iff... for even m always even. Hence sgn(A_c) =
+(−1)^{#loops}: each A_c needs an ODD number of staircase loops. Symmetric
+patterns pair loops up — the likely root cause of every class-table failure.
+
+## Result 7: three-curve reformulation and the surgery paradigm (mixed)
+
+The pointwise-Latin condition is equivalent to: three closed monotone
+staircase curves on the torus such that every vertex is visited by exactly
+two curves — one stepping e0, one stepping e1 (the third cycle idles there).
+The serpentine pair (H_d, C_d) realizes the double cover with A_2 = id —
+forbidden (zero-translation/zero-gadget infeasibility). Findings:
+- Minimal-deviation SAT gadgets: A_2 = single 3m-loop with winding parallel
+  to the translation direction (1,2); (2,1) at m=6, (1,2) at m=8.
+- The exact m=8 loop generalizes to an explicit family (helix12); it makes
+  B_2 Hamiltonian for m = 4, 6, 8 ONLY.
+- The diagonal staircase diag11 (winding (1,1), length 2m) makes B_2 a
+  single m²-cycle for EVERY even m ≤ 40 — but admits NO completion of
+  cycles 0, 1 (SAT-infeasible for m = 6, 8): the three cycles interlock;
+  a gadget cannot be designed for one cycle in isolation.
+
+## Result 8: no band-local mechanism (SAT)
+
+Forcing all deviations from the serpentine background into a band of
+v = i−j diagonals of width w: infeasible for all w ≤ 5 at m = 6 (band = 5/6
+of the torus!) and m = 8, across all background offsets. Together with the
+exhaustion of class-table schemes (boundary+parity classes in i, j, u, v up
+to depth 3–4, both budget families): the even-m gadget is inherently GLOBAL.
+The "local splice on an odd-style background" paradigm is ruled out.
+
+## Road map (updated)
+
+The next push is analytic, not search: derive the exact single-cycle
+criterion for T ∘ A where A is a union of staircase loops (first-return /
+interval-exchange analysis on the loop), then co-design the three curves
+globally to satisfy all three criteria simultaneously. The helix12 family
+and its m ≤ 8 successes give the test bed for the criterion.
+
 ## Open threads
 
 1. Solve the reduced gadget problem uniformly in even m (design or forced

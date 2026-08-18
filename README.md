@@ -54,12 +54,13 @@ Inactive tabs work fine as long as Chrome hasn't suspended them. If all your cla
 
    **Safari:** Develop → Allow JavaScript from Apple Events (enable the Develop menu in Safari → Settings → Advanced first)
 
-5. Open SwiftBar and set the plugin directory to `~/claude-usage-bar`.
-
-6. Make sure non-plugin files are not executable:
+5. Create a dedicated plugin folder containing only a symlink to the script (SwiftBar treats every file in its plugin folder as a plugin, so pointing it at the repo makes LICENSE/README show up as error icons):
    ```bash
-   chmod -x ~/claude-usage-bar/LICENSE ~/claude-usage-bar/README.md ~/claude-usage-bar/screenshot.png
+   mkdir -p ~/.swiftbar-plugins
+   ln -sf ~/claude-usage-bar/claude_usage.10s.py ~/.swiftbar-plugins/claude_usage.10s.py
    ```
+
+6. Open SwiftBar and set the plugin directory to `~/.swiftbar-plugins`.
 
 7. Start SwiftBar automatically at login so the menu bar item is always there. Either enable **Launch at Login** in SwiftBar's preferences, or run:
    ```bash
@@ -83,7 +84,7 @@ That's it. Keep a claude.ai tab open somewhere in your browser (it doesn't need 
 | "Claude ⚠" - no tab found | Open a claude.ai tab in your browser |
 | "Claude ⚠" - JS error | Enable JavaScript from Apple Events in your browser (step 4) |
 | Nothing in menu bar | Make sure SwiftBar is running (`open -a SwiftBar`) and pointed at the right plugin folder. Enable Launch at Login (setup step 7) so it survives restarts |
-| SwiftBar error icon | Make sure only `claude_usage.10s.py` is executable (`chmod -x` other files) |
+| SwiftBar error icon | Your plugin folder contains non-plugin files. Use a dedicated folder with only a symlink to the script (setup step 5) — disabling files in SwiftBar is not enough, "Refresh all" still runs them |
 | Numbers look stale | Click the dropdown → Refresh |
 
 ## Supported browsers
@@ -122,12 +123,15 @@ brew install --cask swiftbar
 # 2. Clone the repo
 git clone https://github.com/PaulSchappert/claude-usage.git ~/claude-usage-bar
 
-# 3. Make plugin executable, other files not
+# 3. Make plugin executable and create a dedicated plugin folder with only a symlink
+#    (never point SwiftBar at the repo itself — it runs every file as a plugin)
 chmod +x ~/claude-usage-bar/claude_usage.10s.py
-chmod -x ~/claude-usage-bar/LICENSE ~/claude-usage-bar/README.md
+mkdir -p ~/.swiftbar-plugins
+ln -sf ~/claude-usage-bar/claude_usage.10s.py ~/.swiftbar-plugins/claude_usage.10s.py
 
-# 4. Set SwiftBar plugin directory (user must do this manually in SwiftBar UI)
-# Tell the user: Open SwiftBar → set plugin folder to ~/claude-usage-bar
+# 4. Set SwiftBar plugin directory (user must do this manually in SwiftBar UI,
+#    or: defaults write com.ameba.SwiftBar PluginDirectory "$HOME/.swiftbar-plugins" && killall SwiftBar; open -a SwiftBar)
+# Tell the user: Open SwiftBar → set plugin folder to ~/.swiftbar-plugins
 
 # 5. Enable JavaScript from Apple Events (user must do this manually)
 # Tell the user: Chrome → View → Developer → Allow JavaScript from Apple Events

@@ -5,9 +5,13 @@
 # <swiftbar.refreshOnOpen>false</swiftbar.refreshOnOpen>
 # <swiftbar.hideAbout>true</swiftbar.hideAbout>
 
+import contextlib
+import fcntl
+import io
 import subprocess
 import json
 import os
+import sys
 import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
@@ -17,6 +21,9 @@ USAGE_PAGE = "https://claude.ai/settings/usage"
 HINT_TIMEOUT = 2   # seconds for the known-good tab hint
 DISCOVERY_TIMEOUT = 8  # seconds per tab during parallel fallback discovery
 CACHE_FILE = os.path.expanduser("~/.claude-usage-tab-hint.json")
+LOCK_FILE = os.path.expanduser("~/.claude-usage.lock")
+LAST_OUTPUT_FILE = os.path.expanduser("~/.claude-usage-last-output.txt")
+STARTS_FILE = os.path.expanduser("~/.claude-usage-starts.log")
 
 # ── JavaScript to run inside the browser tab ──────────────────────────────────
 FETCH_JS = r"""
@@ -394,8 +401,44 @@ def minutes_until(val):
     except Exception:
         return None
 
-# ── main ──────────────────────────────────────────────────────────────────────
+# ── single-instance guard ─────────────────────────────────────────────────────
 def main():
+    """Run render() unless a previous run is still talking to the browser.
+
+    A slow run (tab discovery takes up to ~25 s) must not overlap with the next
+    refresh: overlapping runs each fire their own osascript calls and pile up
+    (seen 2026-10-02: 150 concurrent osascripts, load average 500). An
+    overlapping run reprints the last output instead and exits at once."""
+    try:  # one line per start, so a watcher can see a refresh storm
+        trim = os.path.exists(STARTS_FILE) and os.path.getsize(STARTS_FILE) > 65536
+        with open(STARTS_FILE, "w" if trim else "a") as f:
+            f.write("%.0f\n" % datetime.now().timestamp())
+    except OSError:
+        pass
+    lock = open(LOCK_FILE, "w")
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        try:
+            with open(LAST_OUTPUT_FILE) as f:
+                sys.stdout.write(f.read())
+        except OSError:
+            print("Claude …")
+        return
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        render()
+    out = buf.getvalue()
+    sys.stdout.write(out)
+    try:
+        with open(LAST_OUTPUT_FILE, "w") as f:
+            f.write(out)
+    except OSError:
+        pass  # never break the menu bar over the output cache
+
+
+# ── render ────────────────────────────────────────────────────────────────────
+def render():
     raw, source = fetch_usage()
 
     if raw is None or "_error" in raw:

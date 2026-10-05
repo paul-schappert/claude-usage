@@ -74,6 +74,7 @@ That's it. Keep a claude.ai tab open somewhere in your browser (it doesn't need 
 | What | How |
 |------|-----|
 | Refresh interval | Rename the file - the `10s` in `claude_usage.10s.py` controls it (e.g., `30s`, `1m`, `5m`) |
+| Pause | `touch /tmp/claude-usage-bar.pause` stops all browser access for up to 15 min (e.g. while a script quits apps); delete the file to resume. The plugin never launches a browser that is not running |
 | Debug mode | `CLAUDE_USAGE_DEBUG=1 python3 claude_usage.10s.py` - dumps raw API response |
 
 ## Troubleshooting

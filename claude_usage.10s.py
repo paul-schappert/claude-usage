@@ -11,6 +11,8 @@ import io
 import subprocess
 import json
 import os
+import re
+import time
 import sys
 import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -84,7 +86,30 @@ def save_tab_hint(tab_info):
 
 # ── AppleScript helpers ──────────────────────────────────────────────────────
 
+# Pause switch: while this file exists (and is under 15 min old), the plugin sends no
+# AppleScript to any browser. Useful for scripts that quit apps, e.g. before a restart.
+# It lives in /tmp, so a reboot clears it.
+PAUSE_FILE = "/tmp/claude-usage-bar.pause"
+
+def paused():
+    try:
+        return time.time() - os.path.getmtime(PAUSE_FILE) < 900
+    except OSError:
+        return False
+
+def guard_launch(script):
+    """A bare `tell application "X"` launches X if it is not running, so a browser the
+    user just quit would come straight back. Wrap the tell block in
+    `if application "X" is running`, which never launches anything."""
+    m = re.search(r'tell application "([^"]+)"', script)
+    if not m or m.group(1) == "System Events":
+        return script
+    return f'if application "{m.group(1)}" is running then\n{script}\nend if\n'
+
 def run_applescript(script, timeout=60):
+    if paused():
+        return None
+    script = guard_launch(script)
     tmp = None
     try:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.applescript', delete=False) as f:

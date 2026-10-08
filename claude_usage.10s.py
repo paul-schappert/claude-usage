@@ -553,7 +553,8 @@ def render():
         parts.append(str(round(float(sl_pct))))
     if reset_mins is not None:
         parts.append(str(reset_mins))
-    bar = " \u2502 ".join(parts) if parts else "Claude"
+    # En spaces (U+2002) around the bar: plain spaces read cramped once the menu bar got emptier (Paul 08.10.26).
+    bar = "\u2002\u2502\u2002".join(parts) if parts else "Claude"
 
     print(f"{bar} | color=#FFFFFF darkColor=#FFFFFF")
     link = f"href={USAGE_PAGE}"

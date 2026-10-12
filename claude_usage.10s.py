@@ -25,6 +25,7 @@ DISCOVERY_TIMEOUT = 8  # seconds per tab during parallel fallback discovery
 CACHE_FILE = os.path.expanduser("~/.claude-usage-tab-hint.json")
 LOCK_FILE = os.path.expanduser("~/.claude-usage.lock")
 LAST_OUTPUT_FILE = os.path.expanduser("~/.claude-usage-last-output.txt")
+FETCH_EVERY_S = 30   # browser fetch interval; SwiftBar refreshes every 10 s (file name)
 STARTS_FILE = os.path.expanduser("~/.claude-usage-starts.log")
 
 # ── JavaScript to run inside the browser tab ──────────────────────────────────
@@ -438,6 +439,19 @@ def main():
         trim = os.path.exists(STARTS_FILE) and os.path.getsize(STARTS_FILE) > 65536
         with open(STARTS_FILE, "w" if trim else "a") as f:
             f.write("%.0f\n" % datetime.now().timestamp())
+    except OSError:
+        pass
+    # Throttle (Paul 12.10.26): SwiftBar still calls every 10 s, but the browser is only asked every
+    # FETCH_EVERY_S; in between the last good output is reprinted. Each fetch starts osascript runs,
+    # and every process start costs Apple's ecosystemanalyticsd a code-signature check.
+    try:
+        age = datetime.now().timestamp() - os.path.getmtime(LAST_OUTPUT_FILE)
+        if age < FETCH_EVERY_S:
+            with open(LAST_OUTPUT_FILE) as f:
+                cached = f.read()
+            if cached and "Error" not in cached and "timed out" not in cached:
+                sys.stdout.write(cached)
+                return
     except OSError:
         pass
     lock = open(LOCK_FILE, "w")

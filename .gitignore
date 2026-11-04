@@ -4,3 +4,4 @@ __pycache__/
 .cookie_cache.json
 .tab_hint.json
 .usage_cache.json
+*.bak-*

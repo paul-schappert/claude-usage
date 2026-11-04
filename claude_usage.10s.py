@@ -19,6 +19,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 DEBUG = os.environ.get("CLAUDE_USAGE_DEBUG", "").lower() in ("1", "true", "yes")
+def debug(msg):
+    if DEBUG:
+        sys.stderr.write(msg + "\n")
 USAGE_PAGE = "https://claude.ai/settings/usage"
 HINT_TIMEOUT = 2   # seconds for the known-good tab hint
 DISCOVERY_TIMEOUT = 8  # seconds per tab during parallel fallback discovery
@@ -374,11 +377,35 @@ def fetch_usage():
     # 5. Nothing worked
     if last_err:
         return {"_error": last_err}, None
+    # 22.10.26 (Paul: "have it spawn a claude tab on its own"): no usable tab → ask the tab-grouper
+    # extension (native-messaging socket) for one: an existing usage tab is reloaded, otherwise a pinned,
+    # non-active tab appears in the last-focused Chrome window; the next fetch finds it.
+    if any_browser and not _opened_recently():
+        ensure_usage_tab()
     if any_claude_tab:
         return {"_error": "all_tabs_discarded"}, None
     if any_browser:
         return {"_error": "no_tab"}, None
     return {"_error": "no_browser"}, None
+
+TABS_SOCK = os.path.expanduser("~/.local/share/hotkeyd/chrome-tabs.sock")
+OPENED_FILE = os.path.expanduser("~/.claude-usage-opened.txt")
+def _opened_recently(window=600):   # 27.10.26: was 120 s; with the URL-rewrite bug that meant a new pinned tab every 2 min
+    try:
+        return time.time() - os.path.getmtime(OPENED_FILE) < window
+    except OSError:
+        return False
+def ensure_usage_tab():
+    import socket
+    try:
+        with open(OPENED_FILE, "w") as f:
+            f.write("%.0f\n" % time.time())
+        s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM); s.settimeout(5)
+        s.connect(TABS_SOCK); s.sendall(("open " + USAGE_PAGE + "\n").encode())
+        r = s.makefile().readline(); s.close()
+        debug("ensure_usage_tab: " + r.strip())
+    except Exception as e:
+        debug("ensure_usage_tab failed: %s" % e)
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 def flatten(data, prefix="", out=None):
